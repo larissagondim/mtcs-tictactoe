@@ -11,10 +11,7 @@ import {
   outcomeOf,
 } from '../game/rules';
 import { validatePosition } from '../game/validation';
-import type { Board, Cell } from '../game/types';
-
-/** Parses a 9-char string like "XO.X.O..." into a board. */
-export const b = (s: string): Board => s.split('').map((c): Cell => (c === 'X' || c === 'O' ? c : null));
+import { b } from './helpers';
 
 const playAll = (moves: number[], starter: 'X' | 'O' = 'X') => moves.reduce(applyMove, createGame(starter));
 

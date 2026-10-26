@@ -1730,3 +1730,95 @@ input[type='range'] {
   width: 2px;
   background: var(--text);
 }
+
+/* ---------- steps & narration ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+@media (max-width: 799px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.step {
+  --step: var(--cyan);
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  opacity: 0.6;
+  transition:
+    opacity 0.2s,
+    border-color 0.2s,
+    background 0.2s;
+}
+.step--expansion {
+  --step: var(--purple);
+}
+.step--simulation {
+  --step: var(--amber);
+}
+.step.is-active {
+  opacity: 1;
+  border-color: var(--step);
+  background: color-mix(in srgb, var(--step) 12%, var(--surface-2));
+}
+.steps--fast .step {
+  opacity: 0.85;
+}
+.step__num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--step);
+  border: 1.5px solid var(--step);
+}
+.step__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.step__body strong {
+  color: var(--text);
+  font-size: 0.88rem;
+}
+.narration {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 0.92rem;
+  min-height: 3.6em;
+}
+.narration svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--cyan);
+}

@@ -1,5 +1,6 @@
 import { GamePanel } from './components/GamePanel';
 import { Header } from './components/Header';
+import { StepsPanel } from './components/StepsPanel';
 import { SearchControls } from './components/SearchControls';
 import { useLab } from './hooks/useLab';
 import { useTreeUi } from './hooks/useTreeUi';
@@ -17,6 +18,7 @@ export default function App() {
           <SearchControls lab={lab} />
         </div>
         <div className="col col--center">
+          <StepsPanel controller={lab.controller} />
           <TreeView controller={lab.controller} ui={treeUi} stale={!lab.treeIsCurrent} />
         </div>
       </main>

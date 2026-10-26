@@ -44,7 +44,11 @@ export function useLab() {
 
   /** Single entry point for every position change: the search tree is reset explicitly. */
   const loadPosition = useCallback(
-    (next: GameState, reason: string, opts: { mode?: GameMode; human?: Player; cfg?: Record<Player, MCTSConfig> } = {}) => {
+    (
+      next: GameState,
+      reason: string,
+      opts: { mode?: GameMode; human?: Player; cfg?: Record<Player, MCTSConfig>; keepTree?: boolean } = {},
+    ) => {
       const m = opts.mode ?? mode;
       const h = opts.human ?? humanPlayer;
       const cfg = opts.cfg ?? configs;
@@ -52,9 +56,14 @@ export function useLab() {
       aiTimer.current = null;
       setPendingAiMove(null);
       setGame(next);
-      // In player-vs-AI the tree is searched for the AI side when it is to move.
+      const aiNext = isAiTurn(next, m, h);
+      if (opts.keepTree && !aiNext) {
+        // Keep the tree that produced the AI move so it can still be studied;
+        // it is replaced (and that is logged) when the next search starts.
+        return;
+      }
       controller.reset(next.board, next.toMove, cfg[next.toMove], reason);
-      if (isAiTurn(next, m, h)) controller.start();
+      if (aiNext) controller.start();
     },
     [controller, mode, humanPlayer, configs],
   );
@@ -70,7 +79,7 @@ export function useLab() {
       aiTimer.current = setTimeout(() => {
         aiTimer.current = null;
         setPendingAiMove(null);
-        loadPosition(applyMove(game, move), 'Nova posição após a jogada da IA: árvore reinicializada.');
+        loadPosition(applyMove(game, move), 'Nova posição após a jogada da IA: árvore reinicializada.', { keepTree: true });
       }, AI_MOVE_DELAY);
     }),
   );
@@ -189,6 +198,7 @@ export function useLab() {
     resetSearch,
     applyDecision,
     canApplyDecision,
+    treeIsCurrent: rootMatchesGame,
     pendingAiMove,
     aiTurn: isAiTurn(game, mode, humanPlayer),
     autoPlay,

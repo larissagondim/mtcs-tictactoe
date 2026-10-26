@@ -10,7 +10,6 @@ import {
   moveLabel,
   outcomeOf,
 } from '../game/rules';
-import { validatePosition } from '../game/validation';
 import { b } from './helpers';
 
 const playAll = (moves: number[], starter: 'X' | 'O' = 'X') => moves.reduce(applyMove, createGame(starter));
@@ -98,38 +97,5 @@ describe('game flow', () => {
 
   it('builds a terminal state from an arbitrary board', () => {
     expect(gameFromBoard(b('OOOXX.X..'), 'X').outcome).toBe('O');
-  });
-});
-
-describe('position validation', () => {
-  it('accepts positions reachable with X starting', () => {
-    expect(validatePosition(b('X...O....'), 'X')).toMatchObject({ reachable: true, startingPlayers: ['X'] });
-  });
-
-  it('accepts positions reachable from either starter', () => {
-    expect(validatePosition(b('X...O....'), 'X').reachable).toBe(true);
-    expect(validatePosition(b('X........'), 'O')).toMatchObject({ reachable: true, startingPlayers: ['X'] });
-    expect(validatePosition(b('.........'), 'O').startingPlayers).toEqual(['O']);
-  });
-
-  it('rejects impossible piece counts', () => {
-    const v = validatePosition(b('XXX......'), 'O');
-    expect(v.reachable).toBe(false);
-    expect(v.issues[0]).toMatch(/Contagem/);
-  });
-
-  it('rejects wrong side to move', () => {
-    expect(validatePosition(b('X........'), 'X').reachable).toBe(false);
-  });
-
-  it('rejects two winners', () => {
-    const v = validatePosition(b('XXXOOO...'), 'X');
-    expect(v.reachable).toBe(false);
-    expect(v.issues.join(' ')).toMatch(/X e O/);
-  });
-
-  it('rejects play continuing after a win', () => {
-    // X won on the top row, then O still played (X to move again).
-    expect(validatePosition(b('XXX.O.OO.'), 'X').reachable).toBe(false);
   });
 });

@@ -1,4 +1,5 @@
 import { CandidatesPanel } from './components/CandidatesPanel';
+import { EventConsole } from './components/EventConsole';
 import { GamePanel } from './components/GamePanel';
 import { Header } from './components/Header';
 import { NodeDetails } from './components/NodeDetails';
@@ -27,6 +28,7 @@ export default function App() {
           <NodeDetails controller={lab.controller} ui={treeUi} />
         </div>
         <StatsPanel controller={lab.controller} />
+        <EventConsole controller={lab.controller} />
       </main>
     </div>
   );

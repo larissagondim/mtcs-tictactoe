@@ -1,6 +1,6 @@
-import { Crosshair, Eye, EyeOff, House, Maximize2, Network, Route, ZoomIn, ZoomOut } from 'lucide-react';
+import { House, Maximize2, Network, Route, ZoomIn, ZoomOut } from 'lucide-react';
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
-import { num, outcomeText, resultTone } from '../components/format';
+import { pct } from '../components/format';
 import { moveLabel } from '../game/rules';
 import type { TreeUi } from '../hooks/useTreeUi';
 import type { SearchController } from '../mcts/controller';
@@ -20,21 +20,13 @@ interface View {
   k: number;
 }
 
-const PHASE_TEXT = {
-  idle: 'Aguardando início da busca.',
-  selection: 'Seleção: descendo pela árvore escolhendo o filho com maior UCT.',
-  expansion: 'Expansão: novo nó criado para uma jogada ainda não explorada.',
-  simulation: 'Simulação: rollout jogado até um estado terminal.',
-  backpropagation: 'Retropropagação: resultado somado aos nós do caminho até a raiz.',
-  done: 'Iteração concluída: estatísticas atualizadas.',
-} as const;
-
 export function TreeView({ controller: c, ui, stale }: { controller: SearchController; ui: TreeUi; stale: boolean }) {
   const tree = c.tree;
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 800, h: 560 });
-  const [showStats, setShowStats] = useState(true);
-  const [follow, setFollow] = useState(true);
+  // The tree always follows the search and shows statistics on each node.
+  const showStats = true;
+  const follow = true;
   const [viewState, setViewState] = useState<{ tree: MCTSTree; view: View } | null>(null);
   const drag = useRef<{ px: number; py: number; vx: number; vy: number } | null>(null);
 
@@ -181,8 +173,6 @@ export function TreeView({ controller: c, ui, stale }: { controller: SearchContr
     },
   }));
 
-  const sim = activity.simulation;
-  const showSim = sim && (activity.phase === 'simulation' || activity.phase === 'backpropagation' || activity.phase === 'done');
 
   return (
     <section className="panel tree-panel" aria-labelledby="tree-title">
@@ -203,56 +193,13 @@ export function TreeView({ controller: c, ui, stale }: { controller: SearchContr
           <button type="button" className="btn btn--icon" onClick={goRoot} title="Voltar à raiz" aria-label="Voltar à raiz">
             <House size={16} />
           </button>
-          <button type="button" className="btn btn--small" onClick={locateChosen} disabled={tree.root.children.length === 0} title="Mostra o caminho da jogada escolhida (ou da melhor atual) e sua continuação mais visitada">
-            <Route size={15} aria-hidden /> Jogada escolhida
-          </button>
-          <button
-            type="button"
-            className={`btn btn--icon${follow ? ' is-on' : ''}`}
-            onClick={() => setFollow((f) => !f)}
-            aria-pressed={follow}
-            title="Seguir o caminho da busca (abre automaticamente os nós ativos)"
-            aria-label="Seguir a busca"
-          >
-            <Crosshair size={16} />
-          </button>
-          <button
-            type="button"
-            className={`btn btn--icon${showStats ? ' is-on' : ''}`}
-            onClick={() => setShowStats((s) => !s)}
-            aria-pressed={showStats}
-            title={showStats ? 'Ocultar estatísticas nos nós' : 'Mostrar estatísticas nos nós'}
-            aria-label="Estatísticas nos nós"
-          >
-            {showStats ? <Eye size={16} /> : <EyeOff size={16} />}
+          <button type="button" className="btn btn--small" onClick={locateChosen} disabled={tree.root.children.length === 0} title="Mostra o caminho da jogada escolhida pela IA (ou da melhor até agora)">
+            <Route size={15} aria-hidden /> Ver jogada escolhida
           </button>
         </div>
       </header>
 
-      {stale && (
-        <p className="stale-note">
-          Exibindo a árvore da última busca da IA (posição anterior). Ela será reinicializada quando a próxima busca começar.
-        </p>
-      )}
-      <div className={`activity-strip activity-strip--${activity.phase}`} aria-live="off">
-        <span className="activity-strip__phase">{PHASE_TEXT[activity.phase]}</span>
-        {showSim && sim && (
-          <span className="activity-strip__rollout">
-            Rollout:{' '}
-            {sim.result.moves.length === 0 ? (
-              <em>estado terminal, sem jogadas</em>
-            ) : (
-              sim.result.moves.map((m, i) => (
-                <span key={i} className={`rm rm--${m.player.toLowerCase()}`}>
-                  {m.player}
-                  {moveLabel(m.move)}
-                </span>
-              ))
-            )}{' '}
-            → <strong className={`res res--${resultTone(sim.result.outcome, perspective)}`}>{outcomeText(sim.result.outcome)}</strong>
-          </span>
-        )}
-      </div>
+      {stale && <p className="stale-note">Esta é a árvore que a IA usou para decidir a última jogada.</p>}
 
       <div className="tree-canvas" ref={containerRef}>
         <svg
@@ -307,20 +254,21 @@ export function TreeView({ controller: c, ui, stale }: { controller: SearchContr
           </g>
         </svg>
         <div className="tree-legend" aria-hidden>
-          <span className="lg lg--path">Seleção</span>
-          <span className="lg lg--new">Expansão</span>
-          <span className="lg lg--sim">Simulação</span>
-          <span className="lg lg--bp">Retropropagação</span>
-          <span className="lg lg--dec">Jogada escolhida</span>
+          <span>Chances da IA:</span>
+          <span className="lg lg--win">vitória</span>
+          <span className="lg lg--draw">empate</span>
+          <span className="lg lg--loss">derrota</span>
+          <span className="lg lg--path">caminho atual</span>
+          <span className="lg lg--dec">jogada escolhida</span>
         </div>
       </div>
 
-      <footer className="tree-footer muted small">
-        <span>
-          Exibindo {num(layout.nodes.length)} de {num(tree.nodeCount)} nós · profundidade máx. {tree.maxDepth}
+      <footer className="tree-footer">
+        <p className="node-summary">{summarize(ui.selectedNode, perspective)}</p>
+        <span className="muted small">
+          Clique em um nó para ver suas chances · arraste para mover · role para aproximar
+          {layout.truncated > 0 && ' · alguns nós estão ocultos para não poluir a tela'}
         </span>
-        {layout.truncated > 0 && <span className="warn">{num(layout.truncated)} nós ocultos pelo limite visual (continuam na busca)</span>}
-        <span>Estatísticas na perspectiva de {perspective} (jogador da raiz). Arraste para mover, role para zoom.</span>
       </footer>
     </section>
   );
@@ -359,4 +307,17 @@ function zoomAt(v: View, factor: number, cx: number, cy: number): View {
   const k = clamp(v.k * factor, MIN_ZOOM, MAX_ZOOM);
   const f = k / v.k;
   return { k, x: cx - (cx - v.x) * f, y: cy - (cy - v.y) * f };
+}
+
+/** One plain sentence about a node, from its real counts (AI = root player). */
+function summarize(n: SearchNode, ai: 'X' | 'O'): string {
+  const head =
+    n.move === null ? 'Posição atual' : `${n.playerJustMoved === ai ? 'A IA joga' : 'Você joga'} em ${moveLabel(n.move)}`;
+  if (n.terminal) return `${head}: fim de jogo — ${n.terminal === 'draw' ? 'empate' : n.terminal === ai ? 'a IA vence' : 'a IA perde'}.`;
+  if (n.visits === 0) return `${head}: ainda não foi analisado.`;
+  const v = n.visits;
+  return `${head}: ${v} ${v === 1 ? 'partida simulada' : 'partidas simuladas'} — a IA venceu ${pct(n.outcomes[ai] / v, 0)}, empatou ${pct(
+    n.outcomes.draw / v,
+    0,
+  )} e perdeu ${pct((v - n.outcomes[ai] - n.outcomes.draw) / v, 0)}.`;
 }

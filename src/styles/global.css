@@ -1813,3 +1813,17 @@ input[type='range'] {
   margin-top: 2px;
   color: var(--cyan);
 }
+
+.lg--win::before {
+  background: var(--win);
+}
+.lg--draw::before {
+  background: var(--draw);
+}
+.lg--loss::before {
+  background: var(--loss);
+}
+.node-summary {
+  margin: 0;
+  font-size: 0.9rem;
+}

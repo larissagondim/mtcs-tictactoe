@@ -2,6 +2,7 @@ import { CandidatesPanel } from './components/CandidatesPanel';
 import { GamePanel } from './components/GamePanel';
 import { Header } from './components/Header';
 import { NodeDetails } from './components/NodeDetails';
+import { StatsPanel } from './components/StatsPanel';
 import { SearchControls } from './components/SearchControls';
 import { useLab } from './hooks/useLab';
 import { useTreeUi } from './hooks/useTreeUi';
@@ -25,6 +26,7 @@ export default function App() {
           <CandidatesPanel controller={lab.controller} ui={treeUi} />
           <NodeDetails controller={lab.controller} ui={treeUi} />
         </div>
+        <StatsPanel controller={lab.controller} />
       </main>
     </div>
   );

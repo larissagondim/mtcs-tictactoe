@@ -4,11 +4,11 @@ import type { Lab } from '../hooks/useLab';
 import { num } from './format';
 
 const STATUS_LABEL: Record<SearchStatus, string> = {
-  idle: 'Ociosa',
-  running: 'Buscando',
-  paused: 'Pausada',
-  completed: 'Concluída',
-  cancelled: 'Cancelada',
+  idle: 'ociosa',
+  running: 'em andamento',
+  paused: 'pausada',
+  completed: 'concluída',
+  cancelled: 'cancelada',
 };
 
 const PHASE_LABEL = {
@@ -38,7 +38,7 @@ export function Header({ lab }: { lab: Lab }) {
       <div className="header-status" aria-live="polite">
         <span className={`pill pill--${c.status}`}>
           <span className="pill__dot" aria-hidden />
-          Busca {STATUS_LABEL[c.status].toLowerCase()}
+          Busca {STATUS_LABEL[c.status]}
         </span>
         <span className="header-status__item">
           <span className="muted">Etapa</span> <span className={`phase phase--${c.activity.phase}`}>{PHASE_LABEL[c.activity.phase]}</span>

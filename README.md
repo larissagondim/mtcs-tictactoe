@@ -1,5 +1,7 @@
 # MCTS Lab — Monte Carlo Tree Search no jogo da velha
 
+Monte Carlo Tree Search (MCTS), passo a passo, no jogo da velha. Um laboratório interativo para ver a árvore de busca crescer, acompanhar cada etapa do algoritmo e entender por que a IA escolhe uma jogada.
+
 Laboratório visual e interativo do algoritmo **Monte Carlo Tree Search (MCTS)**. Você joga contra uma IA (ou assiste a duas IAs jogando) e acompanha, em tempo real, como a busca seleciona ramos pelo UCT, expande a árvore, simula partidas e retropropaga os resultados.
 
 Tudo o que aparece na tela — árvore, probabilidades, gráficos e mensagens do console — vem do estado real do mecanismo MCTS. Não há árvores predefinidas nem números ilustrativos.
@@ -71,6 +73,10 @@ O trabalho é fatiado com `setTimeout`, então a interface continua responsiva. 
 **Pausa, continuação e cancelamento.** Pausar só para de agendar ticks: a iteração em andamento fica preservada no gerador e continua de onde parou. Cancelar conclui a iteração em andamento de forma síncrona, para que nenhum nó fique com estatísticas parciais, e não agenda mais nada. "1 iteração" executa exatamente um ciclo completo; se houver uma iteração pela metade, ela é concluída.
 
 **Árvore entre jogadas.** Toda mudança de posição cria uma árvore nova, e isso fica registrado no console. Depois que a IA joga, a árvore que gerou a jogada continua visível, com um aviso, até a próxima busca começar.
+
+## Stack
+
+React 19, TypeScript, Vite, Vitest com Testing Library, ESLint e lucide-react para ícones. Gráficos e árvore em SVG próprio, sem bibliotecas adicionais.
 
 ## As quatro etapas
 

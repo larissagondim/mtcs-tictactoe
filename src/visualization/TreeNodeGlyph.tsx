@@ -76,7 +76,7 @@ export const TreeNodeGlyph = memo(function TreeNodeGlyph({ d, x, y, w, h, mode, 
             {estimated ? pct(d.winRate, 0) : 'n/e'}
           </text>
           <text className="tnode__meta" x={w / 2} y={h / 2 + 18} textAnchor="middle">
-            N {d.visits}
+            {d.visits} {d.visits === 1 ? 'visita' : 'visitas'}
           </text>
         </>
       )}
@@ -87,7 +87,7 @@ export const TreeNodeGlyph = memo(function TreeNodeGlyph({ d, x, y, w, h, mode, 
             {label}
           </text>
           <text className="tnode__meta" x={53} y={30}>
-            N {d.visits}
+            {d.visits} {d.visits === 1 ? 'visita' : 'visitas'}
           </text>
 
           {d.terminal && (

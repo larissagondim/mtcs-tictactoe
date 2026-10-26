@@ -516,7 +516,7 @@ input[type="range"] {
 .tree-canvas {
   position: relative;
   flex: 1;
-  min-height: 460px;
+  min-height: max(460px, calc(100vh - 360px));
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background-color: #0b1220;
@@ -765,7 +765,7 @@ input[type="range"] {
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: var(--surface-2);
-  opacity: 0.6;
+  opacity: 0.45;
   transition:
     opacity 0.2s,
     border-color 0.2s,
@@ -780,7 +780,12 @@ input[type="range"] {
 .step.is-active {
   opacity: 1;
   border-color: var(--step);
-  background: color-mix(in srgb, var(--step) 12%, var(--surface-2));
+  background: color-mix(in srgb, var(--step) 22%, var(--surface-2));
+  box-shadow: 0 0 0 1px var(--step);
+}
+.step.is-active .step__num {
+  background: var(--step);
+  color: var(--bg);
 }
 .steps--fast .step {
   opacity: 0.85;

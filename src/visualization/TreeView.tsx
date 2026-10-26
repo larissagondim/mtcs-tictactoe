@@ -312,7 +312,7 @@ function zoomAt(v: View, factor: number, cx: number, cy: number): View {
 /** One plain sentence about a node, from its real counts (AI = root player). */
 function summarize(n: SearchNode, ai: 'X' | 'O'): string {
   const head =
-    n.move === null ? 'Posição atual' : `${n.playerJustMoved === ai ? 'A IA joga' : 'Você joga'} em ${moveLabel(n.move)}`;
+    n.move === null ? 'Posição analisada' : `${n.playerJustMoved === ai ? 'A IA joga' : 'Você joga'} em ${moveLabel(n.move)}`;
   if (n.terminal) return `${head}: fim de jogo — ${n.terminal === 'draw' ? 'empate' : n.terminal === ai ? 'a IA vence' : 'a IA perde'}.`;
   if (n.visits === 0) return `${head}: ainda não foi analisado.`;
   const v = n.visits;

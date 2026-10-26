@@ -1,3 +1,4 @@
+import { CandidatesPanel } from './components/CandidatesPanel';
 import { GamePanel } from './components/GamePanel';
 import { Header } from './components/Header';
 import { NodeDetails } from './components/NodeDetails';
@@ -21,6 +22,7 @@ export default function App() {
           <TreeView controller={lab.controller} ui={treeUi} stale={!lab.treeIsCurrent} />
         </div>
         <div className="col col--right">
+          <CandidatesPanel controller={lab.controller} ui={treeUi} />
           <NodeDetails controller={lab.controller} ui={treeUi} />
         </div>
       </main>

@@ -1036,6 +1036,7 @@ input[type='range'] {
 
 .details-top {
   display: flex;
+  flex-wrap: wrap;
   gap: 14px;
   align-items: flex-start;
 }
@@ -1043,6 +1044,7 @@ input[type='range'] {
   flex: none;
 }
 .kv {
+  flex: 1 1 180px;
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 3px 10px;
@@ -1159,4 +1161,116 @@ input[type='range'] {
   border-radius: var(--radius-sm);
   color: var(--amber);
   background: var(--amber-soft);
+}
+
+/* ---------- candidates ---------- */
+
+.cand-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cand {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s;
+}
+.cand:hover:not(:disabled) {
+  border-color: var(--faint);
+}
+.cand:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+.cand.is-chosen {
+  border-color: rgba(52, 211, 153, 0.6);
+  background: rgba(52, 211, 153, 0.06);
+}
+.cand.is-selected {
+  box-shadow: inset 0 0 0 1px #f8fafc;
+}
+.cand__move {
+  flex: none;
+  width: 34px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  background: var(--bg);
+}
+.cand__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.cand__line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cand__visits {
+  position: relative;
+  flex: 1;
+  min-width: 90px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  padding-left: 6px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  background: var(--bg);
+  overflow: hidden;
+}
+.cand__vbar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--cyan-soft);
+  border-right: 2px solid var(--cyan);
+  transition: width 0.2s;
+}
+.cand__visits .mono {
+  position: relative;
+}
+.cand__uct {
+  color: var(--purple);
+}
+.cand__badges {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.explain {
+  font-size: 0.82rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+.explain summary {
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 500;
+}
+.explain ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }

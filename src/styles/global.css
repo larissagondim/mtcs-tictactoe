@@ -132,12 +132,8 @@ select {
   display: grid;
   gap: 16px;
   padding: 16px 24px 48px;
-  grid-template-columns: minmax(300px, 340px) minmax(0, 1fr) minmax(300px, 380px);
-  grid-template-areas:
-    'left center right'
-    'stats stats stats'
-    'console console console'
-    'edu edu edu';
+  grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
+  grid-template-areas: 'left center';
   max-width: 1800px;
   margin: 0 auto;
 }
@@ -170,12 +166,7 @@ select {
 @media (max-width: 1279px) {
   .layout {
     grid-template-columns: minmax(290px, 340px) minmax(0, 1fr);
-    grid-template-areas:
-      'left center'
-      'left right'
-      'stats stats'
-      'console console'
-      'edu edu';
+    grid-template-areas: 'left center';
   }
   .col--right {
     display: grid;
@@ -187,7 +178,7 @@ select {
 @media (max-width: 799px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'left' 'center' 'right' 'stats' 'console' 'edu';
+    grid-template-areas: 'left' 'center';
     padding: 12px 12px 40px;
   }
   .app-header {

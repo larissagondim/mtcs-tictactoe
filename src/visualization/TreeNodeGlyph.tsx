@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { MiniBoard } from '../components/Board';
-import { fmtUct, pct } from '../components/format';
+import { pct } from '../components/format';
 import { moveLabel } from '../game/rules';
 import type { Cell, Outcome, Player } from '../game/types';
 
@@ -42,7 +42,7 @@ export const TreeNodeGlyph = memo(function TreeNodeGlyph({ d, x, y, w, h, mode, 
   const title =
     `${label} — N=${d.visits}` +
     (estimated ? `, V ${pct(d.winRate)} E ${pct(d.drawRate)} D ${pct(d.lossRate)} (perspectiva de ${d.perspective})` : ', não estimada') +
-    (d.uct !== null ? `, UCT ${fmtUct(d.uct)}` : '') +
+    
     (d.terminal ? `, ${terminalText(d.terminal)} (exato)` : '');
 
   return (
@@ -89,9 +89,7 @@ export const TreeNodeGlyph = memo(function TreeNodeGlyph({ d, x, y, w, h, mode, 
           <text className="tnode__meta" x={53} y={30}>
             N {d.visits}
           </text>
-          <text className="tnode__meta" x={53} y={42}>
-            {d.uct === null ? '' : `UCT ${fmtUct(d.uct)}`}
-          </text>
+
           {d.terminal && (
             <rect className={`tnode__term tnode__term--${d.terminal === 'draw' ? 'draw' : d.terminal === d.perspective ? 'win' : 'loss'}`} x={w - 14} y={6} width={8} height={8} rx={2} />
           )}

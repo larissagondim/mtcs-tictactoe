@@ -1,4 +1,5 @@
 import { CandidatesPanel } from './components/CandidatesPanel';
+import { Education } from './components/Education';
 import { EventConsole } from './components/EventConsole';
 import { GamePanel } from './components/GamePanel';
 import { Header } from './components/Header';
@@ -29,6 +30,7 @@ export default function App() {
         </div>
         <StatsPanel controller={lab.controller} />
         <EventConsole controller={lab.controller} />
+        <Education lab={lab} />
       </main>
     </div>
   );

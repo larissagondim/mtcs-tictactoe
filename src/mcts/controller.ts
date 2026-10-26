@@ -90,7 +90,6 @@ export class SearchController {
   activeMs = 0;
   /** Incremented on every observable change. */
   version = 0;
-  onComplete: ((decision: Decision) => void) | null = null;
 
   private readonly scheduler: Scheduler;
   private readonly now: () => number;
@@ -103,6 +102,7 @@ export class SearchController {
   private sampleEvery = 1;
   private seq = 0;
   private listeners = new Set<() => void>();
+  private onComplete: ((decision: Decision) => void) | null = null;
 
   constructor(board: Board, toMove: Player, config: MCTSConfig, options: ControllerOptions = {}) {
     this.scheduler = options.scheduler ?? timeoutScheduler;
@@ -125,6 +125,14 @@ export class SearchController {
   private notify() {
     this.version++;
     for (const l of this.listeners) l();
+  }
+
+  /** Registers the callback run when a search completes; returns an unregister function. */
+  setOnComplete(fn: ((decision: Decision) => void) | null): () => void {
+    this.onComplete = fn;
+    return () => {
+      if (this.onComplete === fn) this.onComplete = null;
+    };
   }
 
   // ---------- derived ----------

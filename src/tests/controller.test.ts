@@ -50,7 +50,7 @@ describe('SearchController', () => {
     ctrl.setDetailed(false);
     ctrl.setSpeed('turbo');
     let decided: number | null = null;
-    ctrl.onComplete = (d) => (decided = d.move);
+    ctrl.setOnComplete((d) => (decided = d.move));
     ctrl.start();
     clock.flush();
     expect(ctrl.status).toBe('completed');

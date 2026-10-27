@@ -1,5 +1,5 @@
 import { Pause, Play, RefreshCw } from 'lucide-react';
-import type { Lab, Speed } from '../hooks/useLab';
+import { ITERATION_PRESETS, type Lab, type Speed } from '../hooks/useLab';
 import { num } from './format';
 import { Segmented } from './ui';
 
@@ -8,6 +8,8 @@ const SPEEDS: { value: Speed; label: string }[] = [
   { value: 'normal', label: 'Normal' },
   { value: 'fast', label: 'Rápida' },
 ];
+
+const ITERATION_OPTIONS = ITERATION_PRESETS.map((n) => ({ value: String(n), label: num(n) }));
 
 export function SearchControls({ lab }: { lab: Lab }) {
   const c = lab.controller;
@@ -46,6 +48,17 @@ export function SearchControls({ lab }: { lab: Lab }) {
       <div className="field">
         <span className="field__label">Velocidade</span>
         <Segmented label="Velocidade" small value={lab.speed} onChange={lab.setSpeed} options={SPEEDS} />
+      </div>
+
+      <div className="field">
+        <span className="field__label">Partidas simuladas por jogada</span>
+        <Segmented
+          label="Partidas simuladas por jogada"
+          small
+          value={String(lab.iterations)}
+          onChange={(v) => lab.setIterations(Number(v))}
+          options={ITERATION_OPTIONS}
+        />
       </div>
     </section>
   );

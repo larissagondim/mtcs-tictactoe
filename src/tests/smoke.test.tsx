@@ -25,3 +25,12 @@ test('cells cannot be played while it is the AI turn', async () => {
   const board = screen.getByRole('grid', { name: /Tabuleiro/ });
   expect(within(board).getByRole('gridcell', { name: 'A1: vazia' })).toBeDisabled();
 });
+
+test('the number of simulated games can be changed', async () => {
+  const user = userEvent.setup();
+  render(<App />);
+  expect(screen.getByText(/0 \/ 500 partidas simuladas/)).toBeInTheDocument();
+  await user.click(screen.getByRole('radio', { name: '2.000' }));
+  expect(screen.getByRole('radio', { name: '2.000' })).toHaveAttribute('aria-checked', 'true');
+  expect(screen.getByText(/0 \/ 2\.000 partidas simuladas/)).toBeInTheDocument();
+});

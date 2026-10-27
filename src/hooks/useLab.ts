@@ -10,8 +10,11 @@ export type Speed = 'step' | 'normal' | 'fast';
 export const HUMAN: Player = 'X';
 export const AI: Player = 'O';
 
-/** Fixed AI settings: real MCTS with classic UCT and random playouts. */
+/** AI settings: real MCTS with classic UCT and random playouts. Only the number of playouts is adjustable. */
 export const AI_CONFIG: MCTSConfig = { ...DEFAULT_CONFIG, iterations: 500 };
+
+/** Choices offered for the number of simulated games per AI decision. */
+export const ITERATION_PRESETS = [10, 50, 200, 500, 2000, 10000] as const;
 
 /** Pause before the AI's chosen move is played, so the decision is visible. */
 const AI_MOVE_DELAY = 900;
@@ -41,7 +44,7 @@ export function useLab() {
       const aiNext = isAiTurn(next);
       // After the AI moves, keep its tree on screen so the decision can be studied.
       if (keepTree && !aiNext) return;
-      controller.reset(next.board, next.toMove, AI_CONFIG, reason);
+      controller.reset(next.board, next.toMove, controller.config, reason);
       if (aiNext) controller.start();
     },
     [controller],
@@ -87,7 +90,7 @@ export function useLab() {
     if (aiTimer.current) clearTimeout(aiTimer.current);
     aiTimer.current = null;
     setPendingAiMove(null);
-    controller.reset(game.board, game.toMove, AI_CONFIG, 'Busca reiniciada.');
+    controller.reset(game.board, game.toMove, controller.config, 'Busca reiniciada.');
     if (isAiTurn(game)) controller.start();
   };
 
@@ -95,6 +98,9 @@ export function useLab() {
     setSpeedState(s);
     applySpeed(controller, s);
   };
+
+  /** Changes the playout budget; a running or paused search keeps its tree and uses the new limit. */
+  const setIterations = (n: number) => controller.updateConfig({ iterations: n });
 
   const rootMatchesGame =
     controller.tree.root.board.every((c, i) => c === game.board[i]) && controller.tree.rootPlayer === game.toMove;
@@ -112,6 +118,8 @@ export function useLab() {
     aiTurn: isAiTurn(game),
     speed,
     setSpeed,
+    iterations: controller.config.iterations,
+    setIterations,
     treeIsCurrent: rootMatchesGame,
   };
 }

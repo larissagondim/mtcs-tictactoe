@@ -10,7 +10,7 @@ A interface é propositalmente simples, para quem não conhece programação nem
 - **As 4 etapas do MCTS**: Seleção, Expansão, Simulação e Retropropagação, com a etapa em andamento destacada no modo *Passo a passo*.
 - **Explicação em linguagem simples**: uma frase diz o que a IA está fazendo agora e por que está olhando para um lance. No fim, ela explica a jogada escolhida usando os números reais.
 - **Árvore de busca**: cada nó é uma posição do jogo, com miniatura do tabuleiro, número de visitas e uma barra de vitória/empate/derrota *da IA*. Clique num nó para ver as chances em uma frase. Arraste para mover, role para aproximar, e use "Ver jogada escolhida" para destacar a decisão.
-- **Controles**: Iniciar/Pausar, Reiniciar (refaz a análise da posição) e velocidade.
+- **Controles**: Iniciar/Pausar, Reiniciar (refaz a análise da posição), velocidade e número de partidas simuladas por jogada (10 a 10.000).
   - *Passo a passo*: cada etapa aparece devagar.
   - *Normal*: a árvore cresce de forma visível.
   - *Rápida*: a análise termina quase na hora.
@@ -35,7 +35,7 @@ npm run dev        # abre em http://localhost:5173
 
 ## Como o MCTS funciona aqui
 
-A cada jogada, a IA simula **500 partidas imaginárias**. Cada uma passa pelas quatro etapas:
+A cada jogada, a IA simula **500 partidas imaginárias** (ajustável no painel Simulação). Cada uma passa pelas quatro etapas:
 
 1. **Seleção** — desce pela árvore escolhendo o lance com maior valor UCT: `W/N + C·√(ln Nₚ / N)`, com C = √2. O UCT equilibra lances que deram bons resultados e lances pouco testados. Lances nunca testados vêm primeiro.
 2. **Expansão** — acrescenta à árvore um lance legal ainda não testado.
